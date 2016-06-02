@@ -18,9 +18,9 @@ public class TreeTest {
         Tree tree = new Tree();
         Node n = tree.insert("/home/yey", null);
 
-        assertEquals("/", tree.getRoot().getPattern());
-        assertEquals("home", tree.getRoot().getChildren().get(0).getPattern());
-        assertEquals("yey", n.getPattern());
+        assertEquals("/", tree.getRoot().getPattern().toString());
+        assertEquals("home", tree.getRoot().getChildren().get(0).getPattern().toString());
+        assertEquals("yey", n.getPattern().toString());
     }
 
     @Test
@@ -28,7 +28,7 @@ public class TreeTest {
         Tree tree = new Tree();
         Node n = tree.insert("/home/yey", new Object());
 
-        Matcher m = tree.match("home/yey");
+        NodeMatchResult m = tree.match("home/yey");
 
         assertTrue(m.isMatched());
     }

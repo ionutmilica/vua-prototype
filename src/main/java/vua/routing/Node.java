@@ -7,7 +7,9 @@ import java.util.Optional;
 
 public class Node {
 
-    private String pattern;
+
+    private String segment;
+    private Pattern pattern;
     private Object handler;
     private Node parent = null;
 
@@ -15,15 +17,17 @@ public class Node {
     private ArrayList<Node> children = new ArrayList<>();
 
     public Node(String pattern, Object handler) {
-        this.pattern = pattern;
+        this.segment = pattern;
+        this.pattern = new Pattern(segment);
         this.handler = handler;
     }
 
     public Node(String pattern) {
-        this.pattern = pattern;
+        this.segment = pattern;
+        this.pattern = new Pattern(segment);
     }
 
-    public String getPattern() {
+    public Pattern getPattern() {
         return pattern;
     }
 
@@ -90,15 +94,8 @@ public class Node {
      * @param segment Segment of url that should be matched
      * @return A matcher containing the state and data
      */
-    public Matcher match(String segment) {
-        Matcher matcher = new Matcher();
-
-        if (pattern.equals(segment)) {
-            matcher.setMatched(true);
-            return matcher;
-        }
-
-        return matcher;
+    public MatchResult match(String segment) {
+        return pattern.match(segment);
     }
 
     public void setHandler(Object handler) {

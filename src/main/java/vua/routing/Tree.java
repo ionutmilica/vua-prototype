@@ -55,11 +55,11 @@ class Tree {
         return currentNode;
     }
 
-    public Matcher match(String pattern) {
+    public NodeMatchResult match(String pattern) {
         String[] segments = pattern.split("/");
 
         Node currentNode = root;
-        Matcher matcher = new Matcher();
+        NodeMatchResult matchResult = new NodeMatchResult();
 
         for (String segment : segments) {
             if (segment.isEmpty()) {
@@ -69,10 +69,10 @@ class Tree {
             Node before = currentNode;
 
             for (Node child : currentNode.getChildren()) {
-                Matcher childMatcher = child.match(segment);
+                MatchResult childMatchResult = child.match(segment);
 
-                if (childMatcher.isMatched()) {
-                    matcher.combine(childMatcher);
+                if (childMatchResult.isMatched()) {
+                    matchResult.combine(childMatchResult);
                     currentNode = child;
                     break;
                 }
@@ -80,14 +80,15 @@ class Tree {
 
             if (before == currentNode) {
                 currentNode = null;
+                break;
             }
         }
 
         if (currentNode != null && currentNode.isLeaf()) {
-            matcher.setMatched(true);
-            matcher.setNode(currentNode);
+            matchResult.setMatched(true);
+            matchResult.setNode(currentNode);
         }
 
-        return matcher;
+        return matchResult;
     }
 }

@@ -2,13 +2,11 @@ package vua.routing;
 
 import java.util.HashMap;
 
-class Matcher {
-
+public class MatchResult {
     private HashMap<String, String> data;
-    private Node node;
     private boolean isMatched;
 
-    public Matcher() {
+    public MatchResult() {
         data = new HashMap<>();
         isMatched = false;
     }
@@ -21,13 +19,18 @@ class Matcher {
         return isMatched;
     }
 
-    public void combine(Matcher matcher) {
-        data.putAll(matcher.getData());
+    public void combine(MatchResult matcher) {
+        data.putAll(matcher.getResult());
     }
 
-    public HashMap<String, String> getData() {
+    public HashMap<String, String> getResult() {
         return data;
     }
+}
+
+class NodeMatchResult extends MatchResult {
+
+    private Node node;
 
     public Node getNode() {
         return node;

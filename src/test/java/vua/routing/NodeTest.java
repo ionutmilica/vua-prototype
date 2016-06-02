@@ -9,14 +9,14 @@ public class NodeTest {
     @Test
     public void testNodeCreation() {
         Node n = new Node("/");
-        assertEquals(n.getPattern(), "/");
+        assertEquals(n.getPattern().toString(), "/");
     }
 
     @Test
     public void testNodeMatching() {
         Node n = new Node("house");
-        Matcher m = n.match("house");
-        Matcher nm = n.match("cloud");
+        MatchResult m = n.match("house");
+        MatchResult nm = n.match("cloud");
 
         assertTrue(m.isMatched());
         assertFalse(nm.isMatched());
