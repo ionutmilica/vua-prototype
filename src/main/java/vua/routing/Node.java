@@ -13,18 +13,19 @@ public class Node {
     private Object handler;
     private Node parent = null;
 
-
-    private ArrayList<Node> children = new ArrayList<>();
+    private ArrayList<Node> children;
 
     public Node(String pattern, Object handler) {
         this.segment = pattern;
         this.pattern = new Pattern(segment);
         this.handler = handler;
+        this.children = new ArrayList<>();
     }
 
     public Node(String pattern) {
         this.segment = pattern;
         this.pattern = new Pattern(segment);
+        this.children = new ArrayList<>();
     }
 
     public Pattern getPattern() {
@@ -45,7 +46,7 @@ public class Node {
         Node found = null;
 
         for (Node node : children) {
-            if (node.getPattern().equals(segment)) {
+            if (node.getPattern().toString().equals(segment)) {
                 found = node;
                 break;
             }
@@ -67,6 +68,12 @@ public class Node {
         return parent == null;
     }
 
+    /**
+     * Get the node parent
+     * null is returned for the root node "/"
+     *
+     * @return null or node parent
+     */
     public Node getParent() {
         return parent;
     }
@@ -78,14 +85,25 @@ public class Node {
     /**
      * Add a new child node
      *
-     * @param newNode
+     * @param newNode The node that should be inserted as a child
      */
     public void addChild(Node newNode) {
-        children.add(newNode);
+        int at = 0;
+
+        PatternType currentType = newNode.getPattern().getType();
+
+        for (at = 0; at < children.size(); at++) {
+            PatternType againstType = children.get(at).getPattern().getType();
+            if (currentType.compareTo(againstType) < 0) {
+                break;
+            }
+        }
+
+        children.add(at, newNode);
     }
 
     public String toString() {
-        return String.format("[Node pattern=%s]", pattern);
+        return pattern.toString();
     }
 
     /**
