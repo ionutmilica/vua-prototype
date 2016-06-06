@@ -1,5 +1,6 @@
 package demo.app.controllers;
 
+import vua.http.Redirect;
 import vua.http.Response;
 import vua.routing.Controller;
 
@@ -10,6 +11,6 @@ public class PagesController extends Controller {
     }
 
     public Response contact() {
-        return new Response("Contact!");
+        return Redirect.to("http://youtube.com");
     }
 }
