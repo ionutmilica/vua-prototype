@@ -4,17 +4,24 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import vua.contracts.AppRoutes;
+import vua.routing.Router;
 
 import java.util.ArrayList;
 
 public class Bootstrap {
 
+    protected Package appPackage;
     protected ArrayList<Module> modules;
     protected Injector injector;
-    private StartApp startApp;
 
     public Bootstrap() {
         modules = new ArrayList<>();
+    }
+
+    public Bootstrap(Package appPackage) {
+        modules = new ArrayList<>();
+        this.appPackage = appPackage;
     }
 
     public synchronized void boot() {
@@ -27,7 +34,16 @@ public class Bootstrap {
 
         initInjector();
 
-        // Routes
+        // AppRoutes
+
+        try {
+            Class routesClass = Class.forName(appPackage.getName()+".Routes");
+            Router router = injector.getInstance(Router.class);
+            AppRoutes routesInit = (AppRoutes) routesClass.newInstance();
+            routesInit.init(router);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Start framework
         Application app = injector.getInstance(Application.class);
@@ -45,9 +61,6 @@ public class Bootstrap {
             @Override
             protected void configure() {
                 install(new Modules());
-
-                // Should be the last module
-                install(startApp);
             }
         });
     }
@@ -62,9 +75,5 @@ public class Bootstrap {
 
     private void initInjector() {
         this.injector = Guice.createInjector(modules);
-    }
-
-    public void setStartApp(StartApp startApp) {
-        this.startApp = startApp;
     }
 }

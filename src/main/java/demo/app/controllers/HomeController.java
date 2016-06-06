@@ -5,7 +5,11 @@ import vua.routing.Controller;
 
 public class HomeController extends Controller {
 
-    public Response index() {
+    public Response home() {
         return new Response("Hello world!");
+    }
+
+    public Response doHome() {
+        return new Response("Post response");
     }
 }

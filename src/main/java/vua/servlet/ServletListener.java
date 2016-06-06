@@ -2,19 +2,18 @@ package vua.servlet;
 
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
-import vua.foundation.StartApp;
 import vua.foundation.Bootstrap;
 
 import javax.servlet.ServletContextEvent;
 
 public class ServletListener extends GuiceServletContextListener {
 
-    Bootstrap bootstrap;
-    String contextPath;
-    private StartApp startApp;
+    private final Package appPk;
+    private Bootstrap bootstrap;
+    private String contextPath;
 
-    public ServletListener(StartApp startApp) {
-        this.startApp = startApp;
+    public ServletListener(Package appPk) {
+        this.appPk = appPk;
     }
 
     @Override
@@ -50,8 +49,7 @@ public class ServletListener extends GuiceServletContextListener {
     }
 
     private Bootstrap createBootstrap(String contextPath) {
-        Bootstrap bootstrap = new ServletBootstrap();
-        bootstrap.setStartApp(startApp);
+        Bootstrap bootstrap = new ServletBootstrap(appPk);
         bootstrap.boot();
 
         return bootstrap;

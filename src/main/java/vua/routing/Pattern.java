@@ -111,6 +111,12 @@ public class Pattern {
         clean = builder.toString();
     }
 
+    /**
+     * Match the pattern against a pattern
+     *
+     * @param against
+     * @return
+     */
     public MatchResult match(String against) {
         MatchResult matcher = new MatchResult();
         switch (type) {
@@ -137,10 +143,6 @@ public class Pattern {
         }
 
         return matcher;
-    }
-
-    public String toString() {
-        return this.raw;
     }
 
     /**
@@ -174,5 +176,13 @@ public class Pattern {
      */
     public String getCompiled() {
         return compiled.isEmpty() ? raw : compiled;
+    }
+
+    public String toString() {
+        return this.raw;
+    }
+
+    public String getClean() {
+        return clean;
     }
 }

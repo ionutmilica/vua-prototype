@@ -116,6 +116,10 @@ public class Node {
         return pattern.match(segment);
     }
 
+    public Object getHandler() {
+        return handler;
+    }
+
     public void setHandler(Object handler) {
         this.handler = handler;
     }
