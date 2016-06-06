@@ -12,11 +12,17 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
+    // Web server
     compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.3.9.v20160517'
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.3.9.v20160517'
 
+    // Dependency injection support
     compile group: 'com.google.inject', name: 'guice', version: '4.0'
+    compile group: 'com.google.inject.extensions', name: 'guice-multibindings', version: '4.0'
     compile group: 'com.google.inject.extensions', name: 'guice-servlet', version: '4.0'
     compile group: 'com.google.inject.extensions', name: 'guice-assistedinject', version: '4.0'
 
+    // Json support
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.7.4'
+    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-afterburner', version: '2.7.4'
 }

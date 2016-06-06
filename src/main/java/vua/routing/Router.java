@@ -1,8 +1,10 @@
 package vua.routing;
 
+import com.google.inject.Injector;
 import vua.http.Response;
 import vua.utils.StringUtil;
 
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +15,8 @@ import java.util.HashMap;
 
 public class Router {
 
+    @Inject
+    private Injector injector;
     protected HashMap<String, Tree> methods;
     private ArrayList<Group> groups;
 
@@ -133,6 +137,7 @@ public class Router {
 
         try {
             res = (Response) method.invoke(controller);
+            res.setInjector(injector);
             res.render(response);
         } catch (Exception e) {
             // something

@@ -1,5 +1,7 @@
 package vua.http;
 
+import com.google.inject.Injector;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,9 +10,10 @@ import java.util.Map;
 
 public class Response {
 
-    private String content;
-    private int status = 200;
-    private Map<String, String> headers = new HashMap<>();
+    private Injector injector;
+    protected String content;
+    protected int status = 200;
+    protected Map<String, String> headers = new HashMap<>();
 
     public Response() {}
 
@@ -37,14 +40,30 @@ public class Response {
 
     public void render(HttpServletResponse response) throws IOException {
         response.setStatus(status);
-
-        // send the headers
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            response.setHeader(entry.getKey(), entry.getValue());
-        }
+        sendHeaders(response);
 
         // Write the content to the client
         PrintWriter writer = response.getWriter();
         writer.print(content);
+    }
+
+    public void setInjector(Injector injector) {
+        this.injector = injector;
+    }
+
+    public Injector getInjector() {
+        return injector;
+    }
+
+    /**
+     *
+     *
+     * @param response
+     */
+    protected void sendHeaders(HttpServletResponse response) {
+        // send the headers
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            response.setHeader(entry.getKey(), entry.getValue());
+        }
     }
 }
