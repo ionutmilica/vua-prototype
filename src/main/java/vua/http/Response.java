@@ -4,6 +4,7 @@ import com.google.inject.Injector;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,11 +12,13 @@ import java.util.Map;
 public class Response {
 
     private Injector injector;
-    protected String content;
+    protected String content = "";
     protected int status = 200;
     protected Map<String, String> headers = new HashMap<>();
 
-    public Response() {}
+    public Response() {
+        this.content = "";
+    }
 
     public Response(String content) {
         this.content = content;
@@ -41,10 +44,11 @@ public class Response {
     public void render(HttpServletResponse response) throws IOException {
         response.setStatus(status);
         sendHeaders(response);
+        writeContent(response.getWriter());
+    }
 
-        // Write the content to the client
-        PrintWriter writer = response.getWriter();
-        writer.print(content);
+    protected void writeContent(PrintWriter writer) throws IOException {
+        writer.write(content);
     }
 
     public void setInjector(Injector injector) {

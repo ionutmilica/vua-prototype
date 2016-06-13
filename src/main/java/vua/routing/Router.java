@@ -1,7 +1,10 @@
 package vua.routing;
 
 import com.google.inject.Injector;
+import vua.http.Context;
+import vua.http.Request;
 import vua.http.Response;
+import vua.params.MethodInvoker;
 import vua.utils.StringUtil;
 
 import javax.inject.Inject;
@@ -10,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -107,21 +111,19 @@ public class Router {
      * The route dispatcher
      *
      * @param context
-     * @param request
-     * @param response
      */
-    public void handle(ServletContext context, HttpServletRequest request, HttpServletResponse response) {
-        if ( ! methods.containsKey(request.getMethod())) {
+    public void handle(Context context) {
+        if ( ! methods.containsKey(context.getMethod())) {
             try {
-                response.getWriter().printf("Method not found!");
+                context.getResponse().getWriter().printf("Method not found!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        Tree tree = methods.get(request.getMethod());
+        Tree tree = methods.get(context.getMethod());
 
-        NodeMatchResult result = tree.match(request.getPathInfo());
+        NodeMatchResult result = tree.match(context.getPathInfo());
 
         if ( ! result.isMatched()) {
             // not found
@@ -133,12 +135,14 @@ public class Router {
         Controller controller = a.getControllerInstance();
         Method method = a.getControllerMethod();
 
-        Response res;
+        Response res = null;
 
         try {
-            res = (Response) method.invoke(controller);
-            res.setInjector(injector);
-            res.render(response);
+
+            MethodInvoker methodInvoker = MethodInvoker.build(method, injector);
+            Response response = (Response) methodInvoker.invoke(controller, context);
+            response.setInjector(injector);
+            response.render(context.getResponse());
         } catch (Exception e) {
             // something
             e.printStackTrace();

@@ -30,6 +30,7 @@ public class Pattern {
         type = PatternType.STATIC;
         wildcards = new ArrayList<>();
         isOptional = false;
+        compiled = "";
 
         compile(raw);
     }

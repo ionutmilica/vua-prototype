@@ -25,4 +25,6 @@ dependencies {
     // Json support
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.7.4'
     compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-afterburner', version: '2.7.4'
+
+    compile group: 'org.rythmengine', name: 'rythm-engine', version: '1.1.5'
 }

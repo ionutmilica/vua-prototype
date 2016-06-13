@@ -11,6 +11,15 @@ public class MatchResult {
         isMatched = false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if ( ! (o instanceof MatchResult)) {
+            return false;
+        }
+        MatchResult against = (MatchResult) o;
+        return isMatched == against.isMatched() && data.equals(against.getResult());
+    }
+
     public void setMatched(boolean current) {
         isMatched = current;
     }
@@ -21,6 +30,10 @@ public class MatchResult {
 
     public void combine(MatchResult matcher) {
         data.putAll(matcher.getResult());
+    }
+
+    public void reset() {
+        data.clear();
     }
 
     public HashMap<String, String> getResult() {

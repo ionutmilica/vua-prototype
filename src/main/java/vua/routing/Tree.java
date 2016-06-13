@@ -106,28 +106,41 @@ class Tree {
         if (currentNode != null && currentNode.isLeaf()) {
             matchResult.setMatched(true);
             matchResult.setNode(currentNode);
+        } else {
+            matchResult.reset();
         }
 
         return matchResult;
     }
 
+    private int start = 1;
+
     /**
-     * For a given node, this method will walk to every child of it and save into the
-     * HashMap the relation between them.
+     * For a given node, this method will walk to every child of it and save into StringBuilder relation between them.
      * For example, it can be called with the root node and in the end we'll have all the possible relations
      * so we can generate a dot notation.
      *
      * @param node Starting node
-     * @param groups When the relations are stored
+     * @param nodes Builder where we store every unique node
+     * @param relationships Where every relation between two nodes are stored
      */
-    private void walk(Node node, HashMap<String, String> groups) {
+    private void walk(Node node, StringBuilder nodes, StringBuilder relationships) {
         if (node == null) {
             return;
         }
 
+        int level = start;
+
         for (Node child : node.getChildren()) {
-            walk(child, groups);
-            groups.put(child.toString(), node.toString());
+            start++;
+            nodes.append(String.format("\t%d [label=\"%s\"] ", start, child.getPattern().getCompiled()));
+            if (child.isLeaf()) {
+                nodes.append("[peripheries = 2] ");
+            }
+            nodes.append(";\n");
+            relationships.append(String.format("\t%d -- %d;\n", level, start));
+
+            walk(child, nodes, relationships);
         }
     }
 
@@ -137,17 +150,22 @@ class Tree {
      * @return dot graph notation that can be viewed nicely with GraphViz
      */
     public String dump() {
-        HashMap<String, String> groups = new HashMap<>();
+        start = 1;
 
-        walk(root, groups);
+        StringBuilder nodes = new StringBuilder();
+        StringBuilder relationships = new StringBuilder();
 
-        String format = "graph Router \n{\n%s\n}";
-        StringBuilder links = new StringBuilder();
-
-        for (Map.Entry<String, String> entry : groups.entrySet()) {
-            links.append(String.format("\t\"%s\" -- \"%s\";\n", entry.getKey(), entry.getValue()));
+        // Add the root node
+        nodes.append(String.format("\t%d [label=\"%s\"] ", start, root.getPattern().getCompiled()));
+        if (root.isLeaf()) {
+            nodes.append("[peripheries = 2] ");
         }
+        nodes.append(";\n");
 
-        return String.format(format, links.toString());
+        walk(root, nodes, relationships);
+
+        String format = "graph Router \n{\n%s%s\n}";
+
+        return String.format(format, nodes.toString(), relationships.toString());
     }
 }

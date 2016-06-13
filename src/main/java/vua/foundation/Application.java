@@ -1,6 +1,7 @@
 package vua.foundation;
 
 import com.google.inject.Inject;
+import vua.http.Context;
 import vua.routing.Router;
 
 import javax.servlet.ServletContext;
@@ -24,6 +25,7 @@ public class Application {
     }
 
     public void onReceivedRequest(ServletContext context, HttpServletRequest request, HttpServletResponse response) {
-        router.handle(context, request, response);
+        Context ctx = new Context(context, request, response);
+        router.handle(ctx);
     }
 }

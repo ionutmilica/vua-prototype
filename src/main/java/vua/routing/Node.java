@@ -7,7 +7,6 @@ import java.util.Optional;
 
 public class Node {
 
-
     private String segment;
     private Pattern pattern;
     private Object handler;
@@ -102,6 +101,7 @@ public class Node {
         children.add(at, newNode);
     }
 
+    @Override
     public String toString() {
         return pattern.toString();
     }

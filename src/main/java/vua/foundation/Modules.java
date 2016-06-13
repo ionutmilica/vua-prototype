@@ -12,6 +12,7 @@ public class Modules extends AbstractModule {
     protected void configure() {
         install(new RoutingModule());
 
+
         bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class).in(Singleton.class);
 
         /*
