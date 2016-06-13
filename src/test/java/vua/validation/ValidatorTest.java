@@ -2,8 +2,10 @@ package vua.validation;
 
 import org.junit.Test;
 import vua.utils.ListUtil;
+import vua.validation.annotations.Confirmed;
 import vua.validation.annotations.Matches;
 import vua.validation.annotations.Required;
+import vua.validation.annotations.Same;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +20,8 @@ class MyBean {
 
     @Required
     public String password;
+
+    public String password_confirmation;
 
     public int age;
 
