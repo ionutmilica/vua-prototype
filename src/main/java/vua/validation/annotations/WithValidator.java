@@ -1,6 +1,6 @@
 package vua.validation.annotations;
 
-import vua.validation.validators.Validator;
+import vua.validation.validators.RuleValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -16,5 +16,5 @@ public @interface WithValidator {
      *
      * @return The validator class
      */
-    Class<? extends Validator<?>> value();
+    Class<? extends RuleValidator<?>> value();
 }

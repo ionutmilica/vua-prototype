@@ -1,18 +1,22 @@
 package vua.validation.validators;
 
-import java.util.Map;
+import vua.validation.Validator;
+import vua.validation.annotations.Required;
 
-public class RequiredValidator implements Validator<Object> {
+public class RequiredValidator implements RuleValidator<Object> {
 
-    @Override
-    public boolean validate(Map<String, String[]> data, String field) {
+    private final Required annotation;
 
-
-        return false;
+    public RequiredValidator(Required annotation) {
+        this.annotation = annotation;
     }
 
-    @Override
-    public Class<Object> getValidatedType() {
-        return null;
+    public void validate(Validator validator, String field) {
+        String param = validator.getParamValue(field);
+
+        if (param == null) {
+            String message = String.format(annotation.message(), field);
+            validator.addMessage(field, message);
+        }
     }
 }
