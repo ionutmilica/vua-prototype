@@ -1,7 +1,5 @@
 package vua.routing;
 
-import com.sun.istack.internal.NotNull;
-
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -36,7 +34,6 @@ public class Node {
      *
      * @return ArrayList<Node>
      */
-    @NotNull
     public ArrayList<Node> getChildren() {
         return children;
     }

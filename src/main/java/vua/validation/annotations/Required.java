@@ -23,7 +23,7 @@ public @interface Required {
      *
      * @return The default message
      */
-    String message() default "%s is required";
+    String message() default "The %s field is required.";
 
     /**
      * The key for formatting the field

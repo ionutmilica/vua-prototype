@@ -11,7 +11,7 @@ public class RequiredValidator implements RuleValidator<Object> {
         this.annotation = annotation;
     }
 
-    public void validate(Validator validator, String field) {
+    public void validate(Validator validator, String field, Object value) {
         String param = validator.getParamValue(field);
 
         if (param == null) {

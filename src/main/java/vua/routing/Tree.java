@@ -1,9 +1,5 @@
 package vua.routing;
 
-import com.sun.istack.internal.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 class Tree {
@@ -31,7 +27,7 @@ class Tree {
      * @param handler The callable object that contains the lambda function or an action
      * @return Leaf node where the handler is stored
      */
-    public Node insert(String pattern, @NotNull Object handler) {
+    public Node insert(String pattern, Object handler) {
         String[] segments = pattern.split("/");
 
         Node currentNode = root;

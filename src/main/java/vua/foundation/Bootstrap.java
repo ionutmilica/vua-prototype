@@ -11,17 +11,17 @@ import java.util.ArrayList;
 
 public class Bootstrap {
 
-    protected Package appPackage;
     protected ArrayList<Module> modules;
     protected Injector injector;
+    protected Class startClass;
 
     public Bootstrap() {
         modules = new ArrayList<>();
     }
 
-    public Bootstrap(Package appPackage) {
-        modules = new ArrayList<>();
-        this.appPackage = appPackage;
+    public Bootstrap(Class startClass) {
+        this();
+        this.startClass = startClass;
     }
 
     public synchronized void boot() {
@@ -37,7 +37,7 @@ public class Bootstrap {
         // AppRoutes
 
         try {
-            Class routesClass = Class.forName(appPackage.getName()+".Routes");
+            Class routesClass = Class.forName(startClass.getPackage().getName()+".Routes");
             Router router = injector.getInstance(Router.class);
             AppRoutes routesInit = (AppRoutes) routesClass.newInstance();
             routesInit.init(router);

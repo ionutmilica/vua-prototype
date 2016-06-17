@@ -2,11 +2,22 @@ group 'io.vua'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'eu.appsatori.fatjar'
 
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
+    }
 }
 
 dependencies {
@@ -26,5 +37,17 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.7.4'
     compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-afterburner', version: '2.7.4'
 
-    compile group: 'org.rythmengine', name: 'rythm-engine', version: '1.1.5'
+    // Template support
+    compile group: 'com.mitchellbosecke', name: 'pebble', version: '2.2.1'
+
+    // Beans helpers
+    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.2'
+}
+
+fatJar {
+    classifier 'fat'
+    manifest {
+        attributes 'Main-Class': 'demo.Startup'
+    }
+    exclude 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.SF'
 }

@@ -41,13 +41,13 @@ public class Response {
         this.status = status;
     }
 
-    public void render(HttpServletResponse response) throws IOException {
+    public void render(HttpServletResponse response) throws Exception {
         response.setStatus(status);
         sendHeaders(response);
         writeContent(response.getWriter());
     }
 
-    protected void writeContent(PrintWriter writer) throws IOException {
+    protected void writeContent(PrintWriter writer) throws Exception {
         writer.write(content);
     }
 

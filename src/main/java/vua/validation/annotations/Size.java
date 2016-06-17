@@ -1,17 +1,17 @@
 package vua.validation.annotations;
 
-import vua.validation.validators.SameValidator;
+import vua.validation.validators.SizeValidator;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@WithValidator(SameValidator.class)
+@WithValidator(SizeValidator.class)
 @Target(ElementType.FIELD)
-public @interface Same {
-    String as();
-    String key() default "matches";
-    String message() default "The %s and %s must match.";
+public @interface Size {
+    int value();
+    String key() default "size";
+    String message() default "The %s size must be exactly %d.";
     String fieldKey() default "";
 }

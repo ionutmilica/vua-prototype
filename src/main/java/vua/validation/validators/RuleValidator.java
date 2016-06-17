@@ -3,5 +3,5 @@ package vua.validation.validators;
 import vua.validation.Validator;
 
 public interface RuleValidator<T> {
-    void validate(Validator data, String field);
+    void validate(Validator validator, String field, Object value);
 }

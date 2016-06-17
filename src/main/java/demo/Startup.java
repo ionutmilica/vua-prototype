@@ -6,7 +6,8 @@ public class Startup {
 
     public static void main(String[] args) throws Exception {
         JettyServer server = new JettyServer();
-        server.setAppPackage(Startup.class.getPackage());
+        server.withClass(Startup.class);
+        server.mapDirectory("public/", "/assets");
         server.start();
     }
 }

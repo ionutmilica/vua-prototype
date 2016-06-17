@@ -1,12 +1,10 @@
 package vua.view;
 
-import org.rythmengine.RythmEngine;
+import com.mitchellbosecke.pebble.PebbleEngine;
+import com.mitchellbosecke.pebble.template.PebbleTemplate;
 import vua.http.Response;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,18 +29,9 @@ public class View extends Response {
         data.put(key, val);
     }
 
-    protected void writeContent(PrintWriter writer) throws IOException {
-        RythmEngine engine = getInjector().getInstance(RythmEngine.class);
-
-        ClassLoader loader = this.getClass().getClassLoader();
-
-        URL resource = loader.getResource(file);
-        File f = new File(resource.getPath());
-
-        if (data == null) {
-            engine.render(writer, f);
-        } else {
-            engine.render(writer, f, data);
-        }
+    protected void writeContent(PrintWriter writer) throws Exception {
+        PebbleEngine engine = new PebbleEngine.Builder().build();
+        PebbleTemplate compiledTemplate = engine.getTemplate(file);
+        compiledTemplate.evaluate(writer, data);
     }
 }

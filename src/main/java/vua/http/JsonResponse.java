@@ -18,12 +18,12 @@ public class JsonResponse extends Response {
     }
 
     @Override
-    public void render(HttpServletResponse response) throws IOException {
+    public void render(HttpServletResponse response) throws Exception {
         response.setContentType("application/json");
         super.render(response);
     }
 
-    protected void writeContent(PrintWriter writer) throws IOException {
+    protected void writeContent(PrintWriter writer) throws Exception {
         ObjectMapper objectMapper = getInjector().getInstance(ObjectMapper.class);
         objectMapper.writeValue(writer, object);
     }

@@ -5,8 +5,8 @@ import vua.foundation.Bootstrap;
 
 public class ServletBootstrap extends Bootstrap {
 
-    public ServletBootstrap(Package appPk) {
-        super(appPk);
+    public ServletBootstrap(Class startClass) {
+        super(startClass);
     }
 
     public void configure() {

@@ -1,5 +1,7 @@
 package vua.validation;
 
+import com.fasterxml.jackson.databind.util.BeanUtil;
+import org.apache.commons.beanutils.BeanUtils;
 import vua.utils.StringConverter;
 import vua.validation.annotations.WithValidator;
 import vua.utils.MessageBag;
@@ -7,6 +9,7 @@ import vua.validation.validators.RuleValidator;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 public class Validator<T> {
@@ -23,6 +26,17 @@ public class Validator<T> {
         this();
         this.bean = bean;
         this.params = params;
+
+        populateBean();
+    }
+
+    private void populateBean() {
+        try {
+            BeanUtils.populate(bean, params);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        System.out.println(bean);
     }
 
     public String[] getParam(String key) {
@@ -40,11 +54,13 @@ public class Validator<T> {
         for (Field field : fields) {
             String fieldName = field.getName();
             Annotation[] annotations = field.getDeclaredAnnotations();
+            //Object value = null;
 
+            /*
             try {
                 String[] tmp = params.get(fieldName);
                 String param = tmp != null && tmp.length > 0 ? tmp[0] : null;
-                Object value = StringConverter.convert(param, field.getType());
+                value = StringConverter.convert(param, field.getType());
                 if (value != null) {
                     field.set(bean, value);
                 }
@@ -52,7 +68,10 @@ public class Validator<T> {
                 //
                 e.printStackTrace();
                 messages.add(fieldName, String.format("%s cannot convert to %s type", fieldName, field.getType().getSimpleName()));
-            }
+            } */
+
+            boolean isAccessible = field.isAccessible();
+            field.setAccessible(true);
 
             for (Annotation annotation : annotations) {
                 Class<? extends Annotation> annotationType = annotation.annotationType();
@@ -60,12 +79,16 @@ public class Validator<T> {
                 try {
                     Constructor constructor = a.value().getConstructor(annotationType);
                     RuleValidator<?> validator = (RuleValidator<?>) constructor.newInstance(annotation);
-                    validator.validate(this, fieldName);
+                    validator.validate(this, fieldName, field.get(bean));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+
+            field.setAccessible(isAccessible);
         }
+
+        System.out.println(messages);
 
         return messages.isEmpty();
     }

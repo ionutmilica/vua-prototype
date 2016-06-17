@@ -3,8 +3,6 @@ package vua.validation.validators;
 import vua.validation.Validator;
 import vua.validation.annotations.Same;
 
-import java.util.regex.Pattern;
-
 public class SameValidator implements RuleValidator<Object> {
 
     private final Same annotation;
@@ -14,7 +12,7 @@ public class SameValidator implements RuleValidator<Object> {
     }
 
     @Override
-    public void validate(Validator validator, String field) {
+    public void validate(Validator validator, String field, Object value) {
         String param = validator.getParamValue(field);
         String against = validator.getParamValue(annotation.as());
 

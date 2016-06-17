@@ -12,8 +12,8 @@ public class ConfirmedValidator implements RuleValidator<Object> {
     }
 
     @Override
-    public void validate(Validator validator, String field) {
-        String confirmField = String.format("%s_confirmation", field);
+    public void validate(Validator validator, String field, Object value) {
+        String confirmField = String.format("%sConfirm", field.toLowerCase());
         String param = validator.getParamValue(field);
         String against = validator.getParamValue(confirmField);
 
