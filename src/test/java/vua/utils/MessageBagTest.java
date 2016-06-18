@@ -12,7 +12,9 @@ import static org.junit.Assert.assertEquals;
 public class MessageBagTest {
 
     private ArrayList<String> newList(String ...items) {
-        return ListUtil.newList(items);
+        ArrayList<String> list = new ArrayList<>();
+        Collections.addAll(list, items);
+        return list;
     }
 
     @Test

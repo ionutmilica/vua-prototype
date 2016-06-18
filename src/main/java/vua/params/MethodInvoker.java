@@ -64,7 +64,6 @@ public class MethodInvoker {
         for (int i = 0; i < paramTypes.length; i++) {
             try {
                 Class<?> type = paramTypes[i];
-                System.out.println(type);
                 Class<? extends BaseArgumentExtractor> argument = getExtractorForType(type);
 
                 if (argument == null) {

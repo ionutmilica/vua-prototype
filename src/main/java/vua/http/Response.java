@@ -48,7 +48,11 @@ public class Response {
     }
 
     protected void writeContent(PrintWriter writer) throws Exception {
-        writer.write(content);
+        if (content == null) {
+            writer.write("");
+        } else {
+            writer.write(content);
+        }
     }
 
     public void setInjector(Injector injector) {

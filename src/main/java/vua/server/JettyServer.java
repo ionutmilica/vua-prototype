@@ -11,16 +11,16 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.resource.Resource;
 import vua.servlet.ServletListener;
 
-import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class JettyServer {
 
     private int port = 8080;
     private Class startClass;
+    private ArrayList<Handler> handlers = new ArrayList<>();
 
-    public JettyServer() { }
+    public JettyServer() {
+    }
 
     public void setPort(int port) {
         this.port = port;
@@ -45,12 +45,10 @@ public class JettyServer {
         server.join();
     }
 
-    private ArrayList<Handler> handlers = new ArrayList<>();
-
     /**
      * Add a new directory to the file server
      *
-     * @param localPath Path to the resource directory, ex: "WEB-INF/assets/"
+     * @param localPath  Path to the resource directory, ex: "WEB-INF/assets/"
      * @param publicPath Public uri ex: "/assets"
      */
     public void mapDirectory(String localPath, String publicPath) {

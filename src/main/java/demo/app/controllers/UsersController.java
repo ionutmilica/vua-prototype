@@ -1,6 +1,7 @@
 package demo.app.controllers;
 
 import demo.app.requests.CreateUser;
+import vua.http.QueryMap;
 import vua.http.Response;
 import vua.routing.Controller;
 import vua.validation.FormRequest;
@@ -19,7 +20,8 @@ public class UsersController extends Controller {
     }
 
     public Response store(CreateUser request) {
-        System.out.println("Create user:" + request.getMethod());
+        System.out.println("Create user:" + request.method());
+
         return new Response();
     }
 }
