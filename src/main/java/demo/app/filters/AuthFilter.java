@@ -10,8 +10,6 @@ public class AuthFilter implements Filter {
 
     @Override
     public Response handle(Context context, FilterChain chain) {
-
         return Redirect.to("http://google.ro");
-        //return chain.next(context);
     }
 }
