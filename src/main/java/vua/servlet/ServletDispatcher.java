@@ -3,6 +3,7 @@ package vua.servlet;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import vua.foundation.Application;
+import vua.http.Context;
 import vua.routing.Router;
 
 import javax.servlet.ServletContext;
@@ -34,6 +35,9 @@ public class ServletDispatcher extends HttpServlet {
         // Fire the framework
         Application app = injector.getInstance(Application.class);
 
-        app.onReceivedRequest(context, request, response);
+        Context ctx = injector.getInstance(Context.class);
+        ctx.init(context, request, response);
+
+        app.onReceivedRequest(ctx);
     }
 }

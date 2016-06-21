@@ -49,6 +49,10 @@ public class QueryMap {
         return hasValue() ? values[0] : null;
     }
 
+    public String value(String... keys) {
+        return get(keys).value();
+    }
+
     public String[] values() {
         return values.clone();
     }

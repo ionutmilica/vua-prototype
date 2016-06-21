@@ -10,12 +10,10 @@ public class FormRequestExtractor extends BaseArgumentExtractor<FormRequest> {
     public FormRequest extract(Context context) {
         try {
             FormRequest request = (FormRequest) concreteClass.newInstance();
-            request.setServletRequest(context.getRequest());
+            request.setServletRequest(context.getServletRequest());
             return request;
         } catch (Exception e){
-            Request request = new Request();
-            request.setServletRequest(context.getRequest());
-            return (FormRequest) request;
+            return (FormRequest) context.getRequest();
         }
     }
 

@@ -130,7 +130,7 @@ public class Session {
      * Remove all data from the session
      *
      */
-    public void destroy() {
+    public void clear() {
         request.setValidSession(false);
         session.invalidate();
     }

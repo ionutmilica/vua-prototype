@@ -5,18 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-enum PatternType {
-    STATIC,
-    REGEX,
-    PARAM,
-    WILDCARD
-}
+
 
 public class Pattern {
 
     private String raw;
     private String clean;
-    private PatternType type;
+    private Type type;
     private boolean isOptional;
     private ArrayList<String> wildcards;
 
@@ -24,10 +19,16 @@ public class Pattern {
     private String compiled;
     private java.util.regex.Pattern regex;
 
+    enum Type {
+        STATIC,
+        REGEX,
+        PARAM,
+        WILDCARD
+    }
 
     public Pattern(String pattern) {
         raw = pattern;
-        type = PatternType.STATIC;
+        type = Type.STATIC;
         wildcards = new ArrayList<>();
         isOptional = false;
         compiled = "";
@@ -55,7 +56,7 @@ public class Pattern {
             String name;
 
             name = raw.substring(1, raw.length() - backWords);
-            type = PatternType.PARAM;
+            type = Type.PARAM;
             this.wildcards.add(name);
             clean = "{"+name+"}";
 
@@ -105,7 +106,7 @@ public class Pattern {
         }
 
         if ( ! raw.equals(pattern)) {
-            type = PatternType.REGEX;
+            type = Type.REGEX;
             compiled = "^" + pattern + "$";
             regex = java.util.regex.Pattern.compile(compiled);
         }
@@ -165,7 +166,7 @@ public class Pattern {
      *
      * @return Pattern type
      */
-    public PatternType getType() {
+    public Type getType() {
         return type;
     }
 

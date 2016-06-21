@@ -7,9 +7,7 @@ public class RequestExtractor extends BaseArgumentExtractor<Request> {
 
     @Override
     public Request extract(Context context) {
-        Request request = new Request();
-        request.setServletRequest(context.getRequest());
-        return request;
+        return context.getRequest();
     }
 
     @Override

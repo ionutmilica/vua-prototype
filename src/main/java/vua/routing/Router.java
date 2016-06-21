@@ -1,64 +1,65 @@
 package vua.routing;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import vua.contracts.routing.Filter;
+import vua.contracts.routing.FilterChain;
 import vua.http.Context;
-import vua.http.Request;
 import vua.http.Response;
 import vua.params.MethodInvoker;
+import vua.routing.filters.FilterChainEnd;
+import vua.routing.filters.FilterChainImpl;
 import vua.utils.StringUtil;
+import vua.view.View;
 
-import javax.inject.Inject;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class Router {
 
-    @Inject
     private Injector injector;
-    protected HashMap<String, Tree> methods;
-    private ArrayList<Group> groups;
+    private HashMap<String, Tree> methods = new HashMap<>();
+    private ArrayList<Group> groups = new ArrayList<>();
+    private ArrayList<Object> middleware = new ArrayList<>();
 
-    public Router() {
-        methods = new HashMap<>();
-        groups = new ArrayList<>();
+    @Inject
+    public Router(Injector injector) {
+        this.injector = injector;
         init();
     }
 
     private void init() {
-        String[] m = new String[] {"GET", "POST", "PUT", "PATCH", "DELETE"};
+        String[] m = new String[]{"GET", "POST", "PUT", "PATCH", "DELETE"};
 
         for (String method : m) {
             methods.put(method, new Tree());
         }
     }
 
-    public Node get(String path, Class controllerClass, String action) {
+    public Route get(String path, Class controllerClass, String action) {
         Action a = new Action(controllerClass, action);
         return insert("GET", path, a);
     }
 
-    public Node post(String path, Class controllerClass, String action) {
+    public Route post(String path, Class controllerClass, String action) {
         Action a = new Action(controllerClass, action);
         return insert("POST", path, a);
     }
 
-    public Node put(String path, Class controllerClass, String action) {
+    public Route put(String path, Class controllerClass, String action) {
         Action a = new Action(controllerClass, action);
         return insert("PUT", path, a);
     }
 
-    public Node patch(String path, Class controllerClass, String action) {
+    public Route patch(String path, Class controllerClass, String action) {
         Action a = new Action(controllerClass, action);
         return insert("PATCH", path, a);
     }
 
-    public Node delete(String path, Class controllerClass, String action) {
+    public Route delete(String path, Class controllerClass, String action) {
         Action a = new Action(controllerClass, action);
         return insert("DELETE", path, a);
     }
@@ -71,7 +72,7 @@ public class Router {
      * @param action
      * @return
      */
-    private Node insert(String method, String path, Action action) {
+    private Route insert(String method, String path, Action action) {
         Tree tree = methods.get(method);
 
         StringBuilder builder = new StringBuilder();
@@ -92,7 +93,79 @@ public class Router {
             builder.append(path);
         }
 
-        return tree.insert(builder.toString(), action);
+        LinkedList<Class<? extends Filter>> filters = new LinkedList<>();
+
+        Class controller = action.getController();
+        Method ctrlMethod = action.getMethod();
+
+        if (controller == null || ctrlMethod == null) {
+            throw new RuntimeException("Cannot accept a null controller or null action!");
+        }
+
+        filters.addAll(getClassFilters(action.getController()));
+        FilterWith filterWith = action.getMethod().getAnnotation(FilterWith.class);
+
+        if (filterWith != null) {
+            filters.addAll(Arrays.asList(filterWith.value()));
+        }
+
+        Route route = new Route(this, buildFilterChain(injector, filters, controller, ctrlMethod, null));
+        Node node = tree.insert(builder.toString(), route);
+        route.setNode(node);
+
+        return route;
+    }
+
+    public Route getRoute(String method, String path) {
+        if (!methods.containsKey(method)) {
+            return null;
+        }
+
+        Tree tree = methods.get(method);
+        NodeMatchResult result = tree.match(path);
+
+        if ( ! result.isMatched()) {
+            return null;
+        }
+
+        return (Route) result.getNode().getHandler();
+    }
+
+    private FilterChain buildFilterChain(Injector injector,
+                                         LinkedList<Class<? extends Filter>> filters,
+                                         Class<?> controller,
+                                         Method controllerMethod,
+                                         Response response) {
+        if (filters.isEmpty()) {
+            if (response == null) {
+                return new FilterChainEnd(injector.getProvider(controller), MethodInvoker.build(controllerMethod, injector));
+            } else {
+                return new FilterChainEnd(response);
+            }
+        } else {
+            Class<? extends Filter> filter = filters.pop();
+            FilterChain chain = buildFilterChain(injector, filters, controller, controllerMethod, response);
+            return new FilterChainImpl(injector.getProvider(filter), chain);
+        }
+    }
+
+    private Set<Class<? extends Filter>> getClassFilters(Class controller) {
+        LinkedHashSet<Class<? extends Filter>> filters = new LinkedHashSet<>();
+        if (controller.getSuperclass() != null) {
+            filters.addAll(getClassFilters(controller.getSuperclass()));
+        }
+        if (controller.getInterfaces() != null) {
+            for (Class cls : controller.getInterfaces()) {
+                filters.addAll(getClassFilters(cls));
+            }
+        }
+
+        FilterWith filterWith = (FilterWith) controller.getAnnotation(FilterWith.class);
+        if (filterWith != null) {
+            filters.addAll(Arrays.asList(filterWith.value()));
+        }
+        // And return
+        return filters;
     }
 
     /**
@@ -105,49 +178,6 @@ public class Router {
         groups.add(new Group(prefix));
         group.init(this);
         groups.remove(groups.size() - 1);
-    }
-
-    /**
-     * The route dispatcher
-     *
-     * @param context
-     */
-    public void handle(Context context) {
-        if ( ! methods.containsKey(context.getMethod())) {
-            try {
-                context.getResponse().getWriter().printf("Method not found!");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Tree tree = methods.get(context.getMethod());
-
-        NodeMatchResult result = tree.match(context.getPathInfo());
-
-        if ( ! result.isMatched()) {
-            // not found
-            return;
-        }
-
-        Action a = (Action) result.getNode().getHandler();
-
-        Controller controller = a.getControllerInstance();
-        Method method = a.getControllerMethod();
-
-        Response res = null;
-
-        try {
-
-            MethodInvoker methodInvoker = MethodInvoker.build(method, injector);
-            Response response = (Response) methodInvoker.invoke(controller, context);
-            response.setInjector(injector);
-            response.render(context.getResponse());
-        } catch (Exception e) {
-            // something
-            e.printStackTrace();
-        }
-
     }
 
 }

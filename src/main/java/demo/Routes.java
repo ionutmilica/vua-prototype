@@ -10,13 +10,13 @@ public class Routes implements AppRoutes {
 
     public void init(Router router) {
 
+
         router.group("pages", r -> {
             r.get("about", PagesController.class, "about");
             r.get("contact", PagesController.class, "contact");
         });
 
         router.get("/home", HomeController.class, "home");
-        router.post("/home", HomeController.class, "doHome");
 
         router.group("users", r -> {
             r.get("create", UsersController.class, "create");

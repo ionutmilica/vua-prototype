@@ -86,10 +86,10 @@ public class Node {
     public void addChild(Node newNode) {
         int at = 0;
 
-        PatternType currentType = newNode.getPattern().getType();
+        Pattern.Type currentType = newNode.getPattern().getType();
 
         for (at = 0; at < children.size(); at++) {
-            PatternType againstType = children.get(at).getPattern().getType();
+            Pattern.Type againstType = children.get(at).getPattern().getType();
             if (currentType.compareTo(againstType) < 0) {
                 break;
             }

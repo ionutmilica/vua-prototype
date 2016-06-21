@@ -50,7 +50,7 @@ class Tree {
 
         }
 
-        if (currentNode.getPattern().getType() == PatternType.PARAM && currentNode.getPattern().isOptional()) {
+        if (currentNode.getPattern().getType() == Pattern.Type.PARAM && currentNode.getPattern().isOptional()) {
             if (currentNode.getParent().isLeaf()) {
                 String e = String.format("`%s` node already has a handler and can't be combined with an optional segment!", currentNode);
                 throw new RuntimeException(e);

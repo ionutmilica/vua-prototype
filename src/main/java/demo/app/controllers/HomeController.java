@@ -1,18 +1,22 @@
 package demo.app.controllers;
 
-import vua.http.QueryMap;
+import demo.app.filters.AuthFilter;
 import vua.http.Request;
 import vua.http.Response;
 import vua.routing.Controller;
+import vua.routing.FilterWith;
 
+@FilterWith(AuthFilter.class)
 public class HomeController extends Controller {
 
     public Response home(Request request) {
-        QueryMap params = request.queryMap();
-        return new Response(params.get("user").value());
-    }
+        System.out.println(request.url());
+        System.out.println(request.uri());
+        System.out.println(request.pathInfo());
+        System.out.println(request.userAgent());
+        System.out.println(request.ip());
+        System.out.println(request.contentType());
 
-    public Response doHome(Request request) {
-        return new Response(request.method());
+        return new Response("Hello world!");
     }
 }
