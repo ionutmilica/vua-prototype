@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Context {
 
@@ -18,6 +20,8 @@ public class Context {
     private Request wrappedRequest = null;
     private Injector injector;
 
+    private HashMap<String, Object> storage;
+
     @Inject
     public Context(Injector injector) {
         this.injector = injector;
@@ -27,6 +31,15 @@ public class Context {
         this.request = request;
         this.response = response;
         this.context = context;
+    }
+
+    public void put(String key, Object value) {
+        storage.put(key, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T get(String key) {
+        return (T) storage.get(key);
     }
 
     /**
@@ -51,16 +64,26 @@ public class Context {
         return null;
     }
 
+    public Injector getInjector() {
+        return injector;
+    }
+
+    public void render(Response response) throws Exception {
+        Renderable renderable = response.getRenderable();
+        this.response.setStatus(response.getStatus());
+        this.response.setContentType(response.getContentType());
+        for (Map.Entry<String, String> entry : response.getHeaders().entrySet()) {
+            this.response.setHeader(entry.getKey(), entry.getValue());
+        }
+        renderable.render(this);
+    }
+
     public HttpServletRequest getServletRequest() {
         return request;
     }
 
-    public void renderResponse(Response response) throws Exception {
-        response.setInjector(injector);
-        response.render(getResponse());
-    }
-
-    public HttpServletResponse getResponse() {
+    public HttpServletResponse getServletResponse() {
         return response;
     }
+
 }

@@ -2,6 +2,7 @@ package vua.foundation;
 
 import com.google.inject.Inject;
 import vua.http.Context;
+import vua.http.Renderable;
 import vua.http.Response;
 import vua.routing.Route;
 import vua.routing.Router;
@@ -52,7 +53,7 @@ public class Application {
     private void render(Context context, Response response) {
         try {
             if (response != null) {
-                context.renderResponse(response);
+                context.render(response);
             }
         } catch (Exception e) {
             PrintWriter writer =  context.getWriter();

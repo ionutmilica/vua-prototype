@@ -6,8 +6,8 @@ public class Redirect extends Response {
 
     public static Redirect to(String url) {
         Redirect response = new Redirect();
-        response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-        response.addHeader("Location", url);
+        response.withStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+        response.withHeader("Location", url);
 
         return response;
     }
