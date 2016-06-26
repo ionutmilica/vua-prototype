@@ -54,21 +54,6 @@ public class Validator<T> {
         for (Field field : fields) {
             String fieldName = field.getName();
             Annotation[] annotations = field.getDeclaredAnnotations();
-            //Object value = null;
-
-            /*
-            try {
-                String[] tmp = params.get(fieldName);
-                String param = tmp != null && tmp.length > 0 ? tmp[0] : null;
-                value = StringConverter.convert(param, field.getType());
-                if (value != null) {
-                    field.set(bean, value);
-                }
-            } catch (Exception e) {
-                //
-                e.printStackTrace();
-                messages.add(fieldName, String.format("%s cannot convert to %s type", fieldName, field.getType().getSimpleName()));
-            } */
 
             boolean isAccessible = field.isAccessible();
             field.setAccessible(true);
