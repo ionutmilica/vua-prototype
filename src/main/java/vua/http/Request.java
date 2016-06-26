@@ -2,13 +2,10 @@ package vua.http;
 
 import org.apache.commons.io.IOUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Wrapper class over HttpServletRequest
@@ -263,6 +260,40 @@ public class Request {
             }
         }
         return session;
+    }
+
+    /**
+     * Get a map of key-value cookies
+     *
+     * @return Map of key-value cookies
+     */
+    public Map<String, String> cookies() {
+        Map<String, String> result = new HashMap<>();
+        javax.servlet.http.Cookie[] cookies = servletRequest.getCookies();
+        if (cookies != null) {
+            for (javax.servlet.http.Cookie cookie : cookies) {
+                result.put(cookie.getName(), cookie.getValue());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Get cookie value by a given key
+     *
+     * @param name Cookie name
+     * @return Cookie value
+     */
+    public String cookie(String name) {
+        javax.servlet.http.Cookie[] cookies = servletRequest.getCookies();
+        if (cookies != null) {
+            for (javax.servlet.http.Cookie cookie : cookies) {
+                if (cookie.getName().equals(name)) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 
     public void setServletRequest(HttpServletRequest servletRequest) {

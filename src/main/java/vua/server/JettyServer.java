@@ -6,6 +6,9 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.server.session.HashSessionIdManager;
+import org.eclipse.jetty.server.session.HashSessionManager;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.resource.Resource;
@@ -32,6 +35,9 @@ public class JettyServer {
 
     public void start() throws Exception {
         Server server = new Server(port);
+
+        HashSessionIdManager idManager = new HashSessionIdManager();
+        server.setSessionIdManager(idManager);
 
         handlers.add(createContextHandler());
 
@@ -68,7 +74,7 @@ public class JettyServer {
      * @return
      */
     private ContextHandler createContextHandler() {
-        ServletContextHandler contextHandler = new ServletContextHandler();
+        ServletContextHandler contextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         contextHandler.addServlet(DefaultServlet.class, "/");
         contextHandler.addFilter(GuiceFilter.class, "/*", null);
         contextHandler.addEventListener(new ServletListener(startClass));

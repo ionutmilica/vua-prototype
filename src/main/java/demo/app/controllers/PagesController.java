@@ -4,12 +4,13 @@ import demo.app.models.User;
 import vua.http.JsonResponse;
 import vua.http.Request;
 import vua.http.Response;
+import vua.http.TextResponse;
 import vua.routing.Controller;
 
 public class PagesController extends Controller {
 
     public Response about() {
-        return new Response("About!");
+        return new TextResponse("About!");
     }
 
     public Response contact(Request request) {

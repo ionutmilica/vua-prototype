@@ -42,6 +42,10 @@ public class Context {
         return (T) storage.get(key);
     }
 
+    public boolean has(String key) {
+        return storage.containsKey(key);
+    }
+
     /**
      * Get wrapped request
      *

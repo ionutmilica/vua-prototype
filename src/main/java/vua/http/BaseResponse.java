@@ -1,22 +1,30 @@
 package vua.http;
 
+import java.util.HashMap;
 import java.util.Map;
 
-public interface Response {
+public abstract class BaseResponse implements Response {
+    private int status = 200;
+    private Map<String, String> headers = new HashMap<>();
+    private String contentType = "text/plain";
 
     /**
      * Get the content type
      *
      * @return String
      */
-    String getContentType();
+    public String getContentType() {
+        return contentType;
+    }
 
     /**
      * Set the content type for the response
      *
      * @param contentType Content type
      */
-    void withContentType(String contentType);
+    public void withContentType(String contentType) {
+        this.contentType = contentType;
+    }
 
     /**
      * Add a header into the response
@@ -25,7 +33,10 @@ public interface Response {
      * @param value Value of the header
      * @return Response object
      */
-    Response withHeader(String name, String value);
+    public Response withHeader(String name, String value) {
+        headers.put(name, value);
+        return this;
+    }
 
     /**
      * Get header value by its key
@@ -33,14 +44,18 @@ public interface Response {
      * @param name Name of the header
      * @return value of the header
      */
-    String getHeader(String name);
+    public String getHeader(String name) {
+        return headers.get(name);
+    }
 
     /**
      * Get the stored headers that will be sent to the browser when the response will be rendered
      *
      * @return A map of headers
      */
-     Map<String, String> getHeaders();
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
 
     /**
      * Set the response code
@@ -48,19 +63,25 @@ public interface Response {
      * @param status Http status code
      * @return Response object
      */
-    Response withStatus(int status);
+    public Response withStatus(int status) {
+        this.status = status;
+
+        return this;
+    }
 
     /**
      * Get the http status code used for the response
      *
      * @return A integer
      */
-    int getStatus();
+    public int getStatus() {
+        return status;
+    }
 
     /**
      * Get the renderable object that should be rendered with the response
      *
      * @return Renderable object
      */
-    Renderable getRenderable();
+    public abstract Renderable getRenderable();
 }

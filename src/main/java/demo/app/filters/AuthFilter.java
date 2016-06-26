@@ -5,11 +5,14 @@ import vua.contracts.routing.FilterChain;
 import vua.http.Context;
 import vua.http.Redirect;
 import vua.http.Response;
+import vua.http.Session;
 
 public class AuthFilter implements Filter {
-
-    @Override
     public Response handle(Context context, FilterChain chain) {
-        return Redirect.to("http://google.ro");
+        Session session = context.getRequest().session();
+        if (session == null || session.get("username") == null) {
+            return Redirect.to("/users/create");
+        }
+        return chain.next(context);
     }
 }

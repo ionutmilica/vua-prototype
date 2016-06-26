@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.Writer;
 
-public class JsonResponse extends Response {
+public class JsonResponse extends BaseResponse {
     private Object object;
     private String callback = null;
 

@@ -2,13 +2,13 @@ package vua.view;
 
 import com.mitchellbosecke.pebble.PebbleEngine;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
+import vua.http.BaseResponse;
 import vua.http.Context;
 import vua.http.Renderable;
-import vua.http.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-public class View extends Response {
+public class View extends BaseResponse {
     private String file;
     private Map<String, Object> data;
 
