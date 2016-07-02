@@ -1,0 +1,13 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hbm2ddl.auto">create</property>
+        <property name="show_sql">true</property>
+
+        <mapping package="blog.app.models"/>
+        <mapping class="blog.app.models.Post"/>
+        <mapping class="blog.app.models.User"/>
+    </session-factory>
+</hibernate-configuration>

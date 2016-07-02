@@ -35,7 +35,7 @@ public class TreeTest {
                 "pages/contact-us",
                 "/",
                 "about-us",
-                "files/index.html",
+                "files/posts.html",
         };
 
         Tree tree = makeTree(routes);

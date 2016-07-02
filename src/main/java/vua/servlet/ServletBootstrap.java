@@ -5,7 +5,7 @@ import vua.foundation.Bootstrap;
 
 public class ServletBootstrap extends Bootstrap {
 
-    public ServletBootstrap(Class startClass) {
+    ServletBootstrap(Class startClass) {
         super(startClass);
     }
 

@@ -1,0 +1,49 @@
+{% extends "views/blog/layout.html" %}
+
+{% block intro %}
+<header class="intro-header" style="background-image: url('/assets/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                    <h1>Blog Demo</h1>
+                    <hr class="small">
+                    <span class="subheading">Build with Vua</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            {% for post in posts %}
+            <div class="post-preview">
+                <a href="/post/my-new-post">
+                    <h2 class="post-title">
+                        {{ post.title }}
+                    </h2>
+                    <h3 class="post-subtitle">
+                        {{ post.content }}
+                    </h3>
+                </a>
+                <p class="post-meta">
+                    Posted by <a href="#">{{ post.user.username }}</a> on {{ post.createdAt | date("yyyy-MM-dd") }}
+                </p>
+            </div>
+            <hr>
+            {% endfor %}
+            <!-- Pager -->
+            <ul class="pager">
+                <li class="next">
+                    <a href="#">Older Posts &rarr;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -28,17 +28,14 @@ public class JsonResponse extends BaseResponse {
     }
 
     public Renderable getRenderable() {
-        return new Renderable() {
-            @Override
-            public void render(Context context) throws IOException {
-                Writer writer = context.getWriter();
-                ObjectMapper objectMapper = context.getInjector().getInstance(ObjectMapper.class);
-                if (callback == null) {
-                    objectMapper.writeValue(writer, object);
-                } else {
-                    String value = objectMapper.writeValueAsString(object);
-                    writer.write(String.format("%s(%s);", callback, value));
-                }
+        return context -> {
+            Writer writer = context.getWriter();
+            ObjectMapper objectMapper = context.getInjector().getInstance(ObjectMapper.class);
+            if (callback == null) {
+                objectMapper.writeValue(writer, object);
+            } else {
+                String value = objectMapper.writeValueAsString(object);
+                writer.write(String.format("%s(%s);", callback, value));
             }
         };
     }

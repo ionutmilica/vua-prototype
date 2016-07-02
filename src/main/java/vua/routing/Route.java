@@ -2,6 +2,8 @@ package vua.routing;
 
 import vua.contracts.routing.FilterChain;
 
+import java.util.Map;
+
 public class Route {
 
     private Node node;
@@ -23,9 +25,17 @@ public class Route {
         return this;
     }
 
+    public Node getNode() {
+        return node;
+    }
+
     public Route Name(String name) {
         this.name = name;
-        // set route name
+
+        Map<String, Route> namedRoutes = router.getNamedRoutes();
+        namedRoutes.put(name, this);
+
         return this;
     }
+
 }

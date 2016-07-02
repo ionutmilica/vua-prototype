@@ -7,12 +7,12 @@ import java.util.stream.Collectors;
 
 public class MessageBag {
 
-    private LinkedHashMap<String, ArrayList<String>> messages;
+    private Map<String, ArrayList<String>> messages = new LinkedHashMap<>();
 
     private String format = ":message";
 
     public MessageBag() {
-        messages = new LinkedHashMap<>();
+        //
     }
 
     public void add(String key, String value) {
@@ -128,7 +128,7 @@ public class MessageBag {
      *
      * @return Map of messages
      */
-    public LinkedHashMap<String, ArrayList<String>> getMessages() {
+    public Map<String, ArrayList<String>> getMessages() {
         return messages;
     }
 

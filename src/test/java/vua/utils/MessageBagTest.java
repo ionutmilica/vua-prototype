@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
@@ -23,7 +24,7 @@ public class MessageBagTest {
         bag.add("username", "failed");
         bag.add("username", "failed");
 
-        HashMap<String, ArrayList<String>> messages = bag.getMessages();
+        Map<String, ArrayList<String>> messages = bag.getMessages();
 
         assertEquals(1, messages.size());
         assertEquals(1, messages.get("username").size());
@@ -36,7 +37,7 @@ public class MessageBagTest {
         bag.add("names", "ana");
         bag.add("numbers", "11");
 
-        HashMap<String, ArrayList<String>> messages = bag.getMessages();
+        Map<String, ArrayList<String>> messages = bag.getMessages();
 
         assertEquals(newList("ion", "ana"), messages.get("names"));
         assertEquals(newList("11"), messages.get("numbers"));

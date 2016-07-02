@@ -2,6 +2,7 @@ out
 .idea
 .gradle
 build/
+*.db
 
 # Ignore Gradle GUI config
 gradle-app.setting

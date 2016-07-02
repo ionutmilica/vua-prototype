@@ -31,13 +31,10 @@ public class View extends BaseResponse {
     }
 
     public Renderable getRenderable() {
-        return new Renderable() {
-            @Override
-            public void render(Context context) throws Exception {
-                PebbleEngine engine = new PebbleEngine.Builder().build();
-                PebbleTemplate compiledTemplate = engine.getTemplate(file);
-                compiledTemplate.evaluate(context.getWriter(), data);
-            }
+        return context -> {
+            PebbleEngine engine = new PebbleEngine.Builder().build();
+            PebbleTemplate compiledTemplate = engine.getTemplate(file);
+            compiledTemplate.evaluate(context.getWriter(), data);
         };
     }
 }

@@ -2,6 +2,7 @@ package vua.validation;
 
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import org.apache.commons.beanutils.BeanUtils;
+import vua.http.Request;
 import vua.utils.StringConverter;
 import vua.validation.annotations.WithValidator;
 import vua.utils.MessageBag;
@@ -30,13 +31,16 @@ public class Validator<T> {
         populateBean();
     }
 
+    public Validator(T bean, Request request) {
+        this(bean, request.parameterMap());
+    }
+
     private void populateBean() {
         try {
             BeanUtils.populate(bean, params);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        System.out.println(bean);
     }
 
     public String[] getParam(String key) {
@@ -78,7 +82,15 @@ public class Validator<T> {
         return messages.isEmpty();
     }
 
+    public T getBean() {
+        return bean;
+    }
+
     public void addMessage(String key, String message) {
         messages.add(key, message);
+    }
+
+    public MessageBag getErrors() {
+        return messages;
     }
 }

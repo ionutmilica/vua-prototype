@@ -4,17 +4,11 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import vua.contracts.routing.Filter;
 import vua.contracts.routing.FilterChain;
-import vua.http.Context;
 import vua.http.Response;
 import vua.params.MethodInvoker;
 import vua.routing.filters.FilterChainEnd;
 import vua.routing.filters.FilterChainImpl;
 import vua.utils.StringUtil;
-import vua.view.View;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -23,7 +17,7 @@ public class Router {
     private Injector injector;
     private HashMap<String, Tree> methods = new HashMap<>();
     private ArrayList<Group> groups = new ArrayList<>();
-    private ArrayList<Object> middleware = new ArrayList<>();
+    private Map<String, Route> namedRoutes = new HashMap<>();
 
     @Inject
     public Router(Injector injector) {
@@ -181,4 +175,73 @@ public class Router {
         groups.remove(groups.size() - 1);
     }
 
+    /**
+     * Reverse route and generate a url for it
+     *
+     * @param name
+     * @param params
+     * @return
+     */
+    public String urlFor(String name, String... params) {
+        Route route = getNamedRoutes().get(name);
+
+        if (route == null) {
+            return "/";
+        }
+
+        int optionals = 0, wildcards = 0, skip = 0, weakSkip = 0;
+
+        // Count the wildcards and search for optionals
+        for (Node n = route.getNode(); n != null; n = n.getParent()) {
+            if (n.getPattern().isOptional()) {
+                optionals++;
+            }
+            wildcards += n.getPattern().getWildcards().size();
+        }
+
+        skip = wildcards - params.length;
+
+        if (skip > optionals) {
+
+            if (optionals == 0) {
+                weakSkip = skip;
+                skip = 0;
+            } else {
+                skip = optionals;
+                weakSkip = skip - optionals;
+            }
+        }
+
+        int i = params.length - 1;
+        String path = "";
+
+        for (Node node = route.getNode(); node.getParent() != null; node = node.getParent()) {
+            Pattern pattern = node.getPattern();
+            String nodePath = pattern.getClean();
+
+            if (skip > 0) {
+                skip--;
+                continue;
+            }
+            if (i >= 0) {
+                List<String> nodeWildcards = pattern.getWildcards();
+                for (int j = nodeWildcards.size() - 1; j >= 0; j--) {
+                    if (skip == 0 && weakSkip > 0) {
+                        weakSkip--;
+                    } else {
+                        String format = String.format("{%s}", nodeWildcards.get(j));
+                        nodePath = nodePath.replace(format, params[i]);
+                        i--;
+                    }
+                }
+            }
+            path = "/" + nodePath + path;
+        }
+
+        return path;
+    }
+
+    public Map<String, Route> getNamedRoutes() {
+        return namedRoutes;
+    }
 }

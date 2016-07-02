@@ -12,7 +12,7 @@ public class PatternTest {
 
         Pattern p = new Pattern("{hello}");
 
-        assertEquals(p.getType(), PatternType.PARAM);
+        assertEquals(p.getType(), Pattern.Type.PARAM);
     }
 
     @Test
@@ -30,7 +30,7 @@ public class PatternTest {
         Pattern p;
 
         p = new Pattern("{user}-{age}");
-        assertEquals(p.getType(), PatternType.REGEX);
+        assertEquals(p.getType(), Pattern.Type.REGEX);
     }
 
     @Test

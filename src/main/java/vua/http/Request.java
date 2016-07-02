@@ -215,8 +215,19 @@ public class Request {
         return headers;
     }
 
+    public String parameter(String key) {
+
+        // from routing
+        return null;
+    }
+
+    /*
     public Set<String> queryParams() {
         return servletRequest.getParameterMap().keySet();
+    } */
+
+    public Map<String, String[]> parameterMap() {
+        return servletRequest.getParameterMap();
     }
 
     /**

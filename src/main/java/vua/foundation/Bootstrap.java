@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 public class Bootstrap {
 
-    protected ArrayList<Module> modules;
-    protected Injector injector;
-    protected Class startClass;
+    private ArrayList<Module> modules;
+    private Injector injector;
+    private Class startClass;
 
     public Bootstrap() {
         modules = new ArrayList<>();
@@ -63,6 +63,15 @@ public class Bootstrap {
                 install(new Modules());
             }
         });
+
+        // Load app module entry point if it exists
+        try {
+            Class moduleClass = Class.forName(startClass.getPackage().getName()+".Module");
+            AbstractModule module = (AbstractModule) moduleClass.newInstance();
+            addModule(module);
+        } catch (Exception e) {
+            //
+        }
     }
 
     protected void addModule(Module module) {

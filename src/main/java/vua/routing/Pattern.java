@@ -2,6 +2,7 @@ package vua.routing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
@@ -34,6 +35,10 @@ public class Pattern {
         compiled = "";
 
         compile(raw);
+    }
+
+    public List<String> getWildcards() {
+        return wildcards;
     }
 
     private void compile(String pattern) {
