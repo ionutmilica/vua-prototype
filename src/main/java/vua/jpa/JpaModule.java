@@ -2,6 +2,8 @@ package vua.jpa;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.persist.jpa.JpaPersistModule;
+import vua.foundation.Config;
+
 import java.util.Properties;
 
 import static com.google.inject.matcher.Matchers.annotatedWith;
@@ -9,33 +11,24 @@ import static com.google.inject.matcher.Matchers.any;
 
 public class JpaModule extends AbstractModule {
 
-    public JpaModule() {
+    private Config config;
+
+    public JpaModule(Config config) {
+        this.config = config;
     }
 
     @Override
     protected void configure() {
-        String persistenceUnitName = "blog-dev";
+        String persistenceUnitName = config.get("persistenceUnitName", "blog-dev");
+
+        String noDatabase = config.get("noDatabase", "0");
+
+        if (noDatabase.equals("1")) {
+            return;
+        }
 
         if (persistenceUnitName != null) {
-            String connectionUrl = null;
-            String connectionUsername = null;
-            String connectionPassword = null;
-
-            Properties jpaProperties = new Properties();
-
-            if (connectionUrl != null) {
-                jpaProperties.put("hibernate.connection.url", connectionUrl);
-            }
-
-            if (connectionUsername != null) {
-                jpaProperties.put("hibernate.connection.username", connectionUsername);
-            }
-
-            if (connectionPassword != null) {
-                jpaProperties.put("hibernate.connection.password", connectionPassword);
-            }
-
-            install(new JpaPersistModule(persistenceUnitName).properties(jpaProperties));
+            install(new JpaPersistModule(persistenceUnitName));
 
             UnitOfWorkInterceptor unitOfWorkInterceptor = new UnitOfWorkInterceptor();
             requestInjection(unitOfWorkInterceptor);

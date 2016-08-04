@@ -25,6 +25,8 @@ public class User {
         this.password = password;
     }
 
+    // Getteri si setteri
+
     public String getUsername() {
         return username;
     }
@@ -47,5 +49,9 @@ public class User {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

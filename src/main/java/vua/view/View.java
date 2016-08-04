@@ -32,8 +32,11 @@ public class View extends BaseResponse {
 
     public Renderable getRenderable() {
         return context -> {
-            PebbleEngine engine = new PebbleEngine.Builder().build();
+            PebbleEngine engine = new PebbleEngine.Builder()
+                    .extension(new VuaExtension(context))
+                    .build();
             PebbleTemplate compiledTemplate = engine.getTemplate(file);
+
             compiledTemplate.evaluate(context.getWriter(), data);
         };
     }

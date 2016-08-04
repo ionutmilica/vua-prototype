@@ -48,6 +48,11 @@ dependencies {
 
     // Io utils
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
+
+    // Slug it
+    compile group: 'com.github.slugify', name: 'slugify', version: '2.1.5'
+    compile 'com.thedeanda:lorem:2.0'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.9.2'
 }
 
 fatJar {

@@ -1,6 +1,9 @@
 package blog.app.models;
 
+import com.github.slugify.Slugify;
+
 import javax.persistence.*;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,14 +23,18 @@ public class Post implements Serializable {
     @Column(length = 4000)
     private String content;
 
+    private String background;
+
     private Date createdAt;
 
-    public Post() {}
+    public Post() {
+        this.createdAt = new Date();
+    }
 
     public Post(String title, String content) {
+        this();
         this.title = title;
         this.content = content;
-        this.createdAt = new Date();
     }
 
     public void setTitle(String title) {
@@ -36,6 +43,17 @@ public class Post implements Serializable {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getTitleSlug() {
+        Slugify slugify = null;
+        try {
+            slugify = new Slugify();
+            return slugify.slugify(getTitle());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public String getContent() {
@@ -60,5 +78,17 @@ public class Post implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getBackground() {
+        return background;
+    }
+
+    public void setBackground(String background) {
+        this.background = background;
     }
 }

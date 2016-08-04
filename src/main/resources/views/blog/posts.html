@@ -23,12 +23,12 @@
 
             {% for post in posts %}
             <div class="post-preview">
-                <a href="/post/my-new-post">
+                <a href="{{ url("post", post.id, post.titleSlug)}}">
                     <h2 class="post-title">
                         {{ post.title }}
                     </h2>
                     <h3 class="post-subtitle">
-                        {{ post.content }}
+                        {{ post.content | strip | abbreviate(20) }}
                     </h3>
                 </a>
                 <p class="post-meta">
@@ -37,12 +37,6 @@
             </div>
             <hr>
             {% endfor %}
-            <!-- Pager -->
-            <ul class="pager">
-                <li class="next">
-                    <a href="#">Older Posts &rarr;</a>
-                </li>
-            </ul>
         </div>
     </div>
 </div>

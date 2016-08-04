@@ -17,28 +17,30 @@ class ServiceRegister {
 
     public void start() {
         if (started.get()) {
-            throw new FailedStartException("Ninja service is already started!");
+            throw new FailedStartException("Vua service is already started!");
         }
         List<Target> toStart = new ArrayList<Target>(this.startables);
         started.set(true);
         startables.clear();
-        // Sort the beans to start
+
         Collections.sort(toStart);
-        // Start them
+
         for (Target target : toStart) {
             invokeTarget(target);
         }
     }
 
     public void stop() {
-        if (!started.get()) {
-            throw new FailedStopException("Ninja service is not started!");
+        if ( ! started.get()) {
+            throw new FailedStopException("Vua service is not started!");
         }
-        List<Target> toDispose = new ArrayList<Target>(this.disposables);
+
+        List<Target> toDispose = new ArrayList<>(this.disposables);
         started.set(false);
         disposables.clear();
-        // Sort the beans to dispose
+
         Collections.sort(toDispose);
+
         for (Target target : Lists.reverse(toDispose)) {
             try {
                 invokeTarget(target);

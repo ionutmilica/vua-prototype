@@ -29,7 +29,7 @@ public class Route {
         return node;
     }
 
-    public Route Name(String name) {
+    public Route name(String name) {
         this.name = name;
 
         Map<String, Route> namedRoutes = router.getNamedRoutes();

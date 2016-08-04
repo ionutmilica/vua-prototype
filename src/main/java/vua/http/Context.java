@@ -2,6 +2,7 @@ package vua.http;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import vua.routing.Router;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +20,8 @@ public class Context {
 
     private Request wrappedRequest = null;
     private Injector injector;
-
     private HashMap<String, Object> storage;
+    private Router router;
 
     @Inject
     public Context(Injector injector) {
@@ -31,6 +32,19 @@ public class Context {
         this.request = request;
         this.response = response;
         this.context = context;
+    }
+
+    public void setRouter(Router router) {
+        this.router = router;
+    }
+
+    public Router getRouter() {
+        return router;
+    }
+
+    public void setParameters(Map<String, String> parameters) {
+        Request request = getRequest();
+        request.setParameters(parameters);
     }
 
     public void put(String key, Object value) {
@@ -74,11 +88,14 @@ public class Context {
 
     public void render(Response response) throws Exception {
         Renderable renderable = response.getRenderable();
+
         this.response.setStatus(response.getStatus());
         this.response.setContentType(response.getContentType());
+
         for (Map.Entry<String, String> entry : response.getHeaders().entrySet()) {
             this.response.setHeader(entry.getKey(), entry.getValue());
         }
+
         renderable.render(this);
     }
 

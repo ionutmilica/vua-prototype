@@ -110,7 +110,17 @@ public class Router {
         return route;
     }
 
-    public Route getRoute(String method, String path) {
+    public String dumpTree(String method) {
+        Tree tree = methods.get(method);
+
+        if (tree != null) {
+            return tree.dump();
+        }
+
+        return "";
+    }
+
+    public RouteWithData getRoute(String method, String path) {
         if (!methods.containsKey(method)) {
             return null;
         }
@@ -122,8 +132,7 @@ public class Router {
             return null;
         }
 
-
-        return (Route) result.getNode().getHandler();
+        return new RouteWithData((Route) result.getNode().getHandler(), result.getResult());
     }
 
     private FilterChain buildFilterChain(Injector injector,
@@ -223,6 +232,7 @@ public class Router {
                 skip--;
                 continue;
             }
+
             if (i >= 0) {
                 List<String> nodeWildcards = pattern.getWildcards();
                 for (int j = nodeWildcards.size() - 1; j >= 0; j--) {

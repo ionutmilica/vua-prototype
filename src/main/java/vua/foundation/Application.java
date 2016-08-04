@@ -2,9 +2,8 @@ package vua.foundation;
 
 import com.google.inject.Inject;
 import vua.http.Context;
-import vua.http.Renderable;
 import vua.http.Response;
-import vua.routing.Route;
+import vua.routing.RouteWithData;
 import vua.routing.Router;
 import vua.services.Service;
 import vua.view.View;
@@ -43,16 +42,19 @@ public class Application {
         String pathInfo = context.getRequest().pathInfo();
         Response response = null;
 
-        Route route = router.getRoute(method, pathInfo);
+        context.setRouter(router);
+        RouteWithData result = router.getRoute(method, pathInfo);
 
-        if (route == null) {
+        if (result == null) {
             response = new View("views/errors/404.html");
             render(context, response);
             return;
         }
 
+        context.setParameters(result.getData());
+
         try {
-            response = route.getFilterChain().next(context);
+            response = result.getRoute().getFilterChain().next(context);
             render(context, response);
         } catch (Exception e) {
             PrintWriter writer =  context.getWriter();

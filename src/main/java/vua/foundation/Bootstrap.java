@@ -57,10 +57,13 @@ public class Bootstrap {
     }
 
     public void configure() {
+        Config config = new Config();
+
         addModule(new AbstractModule() {
             @Override
             protected void configure() {
-                install(new Modules());
+                bind(Config.class).toInstance(config);
+                install(new Modules(config));
             }
         });
 

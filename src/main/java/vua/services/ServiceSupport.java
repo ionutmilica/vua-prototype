@@ -7,7 +7,6 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-
 import java.lang.reflect.Method;
 
 public class ServiceSupport {
@@ -24,7 +23,6 @@ public class ServiceSupport {
         @Override
         public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
             if (hasServiceMethod(type.getRawType())) {
-                // Add the listener
                 encounter.register(new ServiceListener<I>());
             }
         }

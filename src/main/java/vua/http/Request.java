@@ -1,5 +1,6 @@
 package vua.http;
 
+import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.io.IOUtils;
 
 import javax.servlet.http.*;
@@ -20,8 +21,10 @@ public class Request {
     // Sessions
     private boolean validSession = false;
     private Session session;
+    private Map<String, String> parameters;
 
     public Request() {
+
     }
 
     /**
@@ -216,9 +219,17 @@ public class Request {
     }
 
     public String parameter(String key) {
+        return parameters.get(key);
+    }
 
-        // from routing
-        return null;
+    public Object parameter(String key, Class type) {
+        String parameter = parameter(key);
+
+        if (parameter == null) {
+            return  null;
+        }
+
+        return ConvertUtils.convert(parameter, type);
     }
 
     /*
@@ -327,5 +338,9 @@ public class Request {
      */
     void setValidSession(boolean validSession) {
         this.validSession = validSession;
+    }
+
+    public void setParameters(Map<String, String> parameters) {
+        this.parameters = parameters;
     }
 }
